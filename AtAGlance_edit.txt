@@ -1,0 +1,39 @@
+# check if event is currently going
+$if( gv(ev_curr),
+
+    if( ci(allday, gv(eventN)), 
+    " today",
+    " until "+df(hh:mm, ci(end, gv(eventN)))
+    ),
+
+    # check if it's an all day event
+    if( ci(allday, gv(eventN)),
+
+        # allday event: write "tomorrow" or "in X days"
+        if( tf(ci(start, gv(eventN)), DD)<1,
+            " tomorrow",
+            " in " + (tf(ci(start, gv(eventN)), DD)+1)+" days"
+        ),
+
+        # normal event: check if event is today
+        if( gv(ev_tod),
+
+            # event is today
+            gv(ev_dt),
+
+            # event is not today, check if it is tomorrow
+            if( gv(ev_tom),
+
+                # event is tomorrow, check if it is more than 12h away
+                if( gv(ev_hrs) < gv(h_tmrw),
+                    # event in < 12h
+                    gv(ev_dt),
+                    # event in > 12h
+                    " tomorrow"
+                ),
+
+                # event is not tomorrow, write "in X days"
+                " in " + (tf(ci(start, gv(eventN)), DD)+1)+" days_not")
+        )
+    )
+)$

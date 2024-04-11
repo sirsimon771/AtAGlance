@@ -1,0 +1,10 @@
+# only skip if event 0 is all-day
+$if(ci(allday, 0) &
+
+# only skip if the next event is not all-day
+ci(allday, 1) = 0 &
+
+# only skip if the next event is < minM minutes away
+tf(ci(start, 1), mm) < gv(minM)
+
+, 1, 0)$
